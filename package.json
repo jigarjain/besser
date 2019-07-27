@@ -1,0 +1,72 @@
+{
+  "name": "besser",
+  "version": "0.0.1",
+  "description": "An A/B Suite",
+  "main": "dist/server.js",
+  "engines": {
+    "node": ">=12.7.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "node dist/server.js",
+    "test": "jest --config=jest.config.json",
+    "test-verbose": "jest --config=jest.config.json --verbose --coverage",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch-node": "nodemon dist/server.js",
+    "watch-ts": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jigarjain/besser.git"
+  },
+  "keywords": [
+    "ab-testing"
+  ],
+  "author": "Jigar Jain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jigarjain/besser/issues"
+  },
+  "homepage": "https://github.com/jigarjain/besser#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.(json)": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{js,ts}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^4.17.0",
+    "@types/jest": "^24.0.15",
+    "@types/supertest": "^2.0.8",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
+    "concurrently": "^4.1.1",
+    "eslint": "^6.1.0",
+    "husky": "^3.0.1",
+    "jest": "^24.8.0",
+    "lint-staged": "^9.2.1",
+    "nodemon": "^1.19.1",
+    "prettier": "^1.18.2",
+    "supertest": "^4.0.2",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  }
+}

@@ -1,2 +1,2 @@
 # besser
-A A/B testing engine
+An A/B testing engine
