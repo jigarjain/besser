@@ -1,14 +1,12 @@
-import Express, { ErrorRequestHandler } from 'express';
+import { ErrorRequestHandler } from 'express';
 
-const router = Express.Router();
-
-router.use(((err, req, res, next) => {
+export default ((err: Error, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
 
-  res.status(500);
-  res.json({ errors: [err] });
-}) as ErrorRequestHandler);
+  console.error(err);
 
-export default router;
+  res.status(500);
+  res.json({ errors: [err.message] });
+}) as ErrorRequestHandler;

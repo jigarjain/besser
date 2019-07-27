@@ -16,6 +16,7 @@ const app = express();
 // Express configurations
 app.set('port', process.env.PORT || 3000);
 app.use((req, res, next) => {
+  req.data = {};
   res.removeHeader('X-Powered-By');
   next();
 });

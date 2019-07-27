@@ -1,33 +1,36 @@
 import { Router } from 'express';
-import asyncMiddleware from '../utils/asyncMiddleware';
+import { asyncHandler, validatorMiddleware } from '../utils/middlwares';
+import goalValidator from '../validators/goal';
 
 const router = Router();
 
 router.get(
   '/goals',
-  asyncMiddleware(async (req, res, next) => {
+  asyncHandler(async (req, res, next) => {
     res.json({ data: 'Fetched all goals' });
   })
 );
 
 router.post(
   '/goals',
-  asyncMiddleware(async (req, res, next) => {
-    res.json({ data: 'Created a goal' });
+  validatorMiddleware(goalValidator),
+  asyncHandler(async (req, res, next) => {
+    res.json({ data: req.data.body });
   })
 );
 
 router.get(
-  '/goals/:goal_id',
-  asyncMiddleware(async (req, res, next) => {
-    res.json({ data: `Fetched a goal with id ${req.params.goal_id}` });
+  '/goals/:goalId',
+  asyncHandler(async (req, res, next) => {
+    res.json({ data: `Fetched a goal with id ${req.params.goalId}` });
   })
 );
 
 router.put(
-  '/goals/:goal_id',
-  asyncMiddleware(async (req, res, next) => {
-    res.json({ data: `Updated a goal with id ${req.params.goal_id}` });
+  '/goals/:goalId',
+  validatorMiddleware(goalValidator),
+  asyncHandler(async (req, res, next) => {
+    res.json({ data: `Updated a goal with id ${req.params.goalId}` });
   })
 );
 
