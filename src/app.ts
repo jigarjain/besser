@@ -4,6 +4,10 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import lusca from 'lusca';
 import requestId from 'express-request-id';
+import expressPino from 'express-pino-logger';
+
+// Logger
+import logger from './logger';
 
 // Route Controllers
 import Experiment from './controllers/ExperimentController';
@@ -29,6 +33,11 @@ app.use(
 app.use(compression());
 app.use(bodyParser.json());
 app.use(requestId());
+app.use(
+  expressPino({
+    logger
+  })
+);
 
 // Setting up routes
 app.use(Experiment);
