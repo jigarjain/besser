@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+require('dotenv').config();
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
@@ -6,9 +6,9 @@ import lusca from 'lusca';
 import requestId from 'express-request-id';
 
 // Route Controllers
-import Experiment from './controllers/Experiment';
-import Goal from './controllers/Goal';
-import Error from './controllers/error';
+import Experiment from './controllers/ExperimentController';
+import Goal from './controllers/GoalController';
+import Error from './controllers/ErrorController';
 
 // Create a new express application instance
 const app = express();

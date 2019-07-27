@@ -1,0 +1,4 @@
+export const GOAL_TYPE = {
+  IMPRESSION: 'IMPRESSION',
+  CUSTOM: 'CUSTOM'
+};
