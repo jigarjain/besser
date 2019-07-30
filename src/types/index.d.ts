@@ -2,11 +2,10 @@ declare module 'express-pino-logger';
 
 declare namespace Express {
   export interface Request {
-    id: string;
+    id: string,
+    log: any,
     data: {
-      body?: any;
+      body?: any
     };
   }
 }
-
-type GoalType = 'IMPRESSION' | 'CUSTOM';

@@ -8,8 +8,8 @@ type RouteHandlerFn = (
 
 /**
  * This is a standard asyncMiddlware for wrapping the async route handlers.
- * Simply put, if you wish to use `async/await` syntax on your express route handlers,
- * wrap them with this function
+ * Simply put, if you wish to use `async/await` syntax on your express route
+ * handlers wrap them with this function
  */
 export const asyncHandler = (fn: RouteHandlerFn) => (
   req: Request,
@@ -22,11 +22,12 @@ export const asyncHandler = (fn: RouteHandlerFn) => (
 type ValidatorFn = (body: any) => any;
 
 /**
- * This is a middleware for validations. A validation function(`validatorFn`) can be passed
- * to this middlware which will receive the `req.body` as an argument. The `validatorFn` must
- * return the sanitized result on validation success or should throw error(s) on failure.
- * This middleware will set the sanitized result on `req.data.body` on success & pass the control to next middleware or it will
- * respond with validation errors & finish the request.
+ * This is a middleware for validations. A validation function(`validatorFn`)
+ * can be passed to this middlware which will receive the `req.body` as an
+ * argument. The `validatorFn` must return the sanitized result on validation
+ * success or should throw error(s) on failure. This middleware will set the
+ * sanitized result on `req.data.body` on success & pass the control to next
+ * middleware or it will respond with validation errors & finish the request.
  */
 export const validatorMiddleware = (validatorFn: ValidatorFn) => (
   req: Request,
@@ -48,12 +49,21 @@ export const validatorMiddleware = (validatorFn: ValidatorFn) => (
     });
 };
 
-export const errorHandler = ((err: Error, req, res, next) => {
+/**
+ * This is a catch-all error handler which will be called when any uncaught
+ * error occurs in one of the mounted routes
+ */
+export const errorHandler = ((
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   if (res.headersSent) {
     return next(err);
   }
 
-  console.error(err);
+  req.log.error(err);
 
   res.status(500);
   res.json({ errors: [err.message] });

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { asyncHandler, validatorMiddleware } from '../utils/middlwares';
+import { asyncHandler, validatorMiddleware } from '../utils/middlewares';
 import experimentValidator from '../validators/experiment';
 const router = Router();
 
