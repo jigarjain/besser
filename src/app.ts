@@ -12,7 +12,9 @@ import logger from './logger';
 // Route Controllers
 import Experiment from './controllers/ExperimentController';
 import Goal from './controllers/GoalController';
-import Error from './controllers/ErrorController';
+
+// Other middlewares
+import { errorHandler } from './utils/middlewares';
 
 // Create a new express application instance
 const app = express();
@@ -42,7 +44,9 @@ app.use(
 // Setting up routes
 app.use(Experiment);
 app.use(Goal);
-app.use(Error);
+
+// Setting up global error handler
+app.use(errorHandler);
 
 // Setting up
 export default app;

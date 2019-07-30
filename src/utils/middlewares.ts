@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 
 type RouteHandlerFn = (
   req: Request,
@@ -47,3 +47,14 @@ export const validatorMiddleware = (validatorFn: ValidatorFn) => (
       res.status(422).json({ errors: errors.map(e => e.message) });
     });
 };
+
+export const errorHandler = ((err: Error, req, res, next) => {
+  if (res.headersSent) {
+    return next(err);
+  }
+
+  console.error(err);
+
+  res.status(500);
+  res.json({ errors: [err.message] });
+}) as ErrorRequestHandler;
