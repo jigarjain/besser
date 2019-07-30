@@ -1,0 +1,11 @@
+version: "3"
+services:
+  db:
+    image: "postgres:11.4"
+    container_name: "besser_postgres"
+    ports:
+      - "5432:5432"
+    volumes:
+      - besser_postgres:/var/lib/postgresql/data
+volumes:
+  besser_postgres:
