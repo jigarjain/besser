@@ -1,39 +1,54 @@
 import { Router } from 'express';
 import { asyncHandler, validatorMiddleware } from '../utils/middlewares';
 import experimentValidator from '../validators/experiment';
+import ExperimentService from '../services/ExperimentService';
+import { Experiment } from '../types/common';
+
 const router = Router();
 
 router.get(
   '/experiments',
-  asyncHandler(async (req, res, next) => {
-    res.json({ data: 'All experiments fetched' });
+  asyncHandler(async (req, res) => {
+    const experiments = await ExperimentService.getAllExperiments();
+    res.json({ data: experiments });
   })
 );
 
 router.post(
   '/experiments',
   validatorMiddleware(experimentValidator),
-  asyncHandler(async (req, res, next) => {
-    res.json({ data: req.data.body });
+  asyncHandler(async (req, res) => {
+    const body: Partial<Experiment> = req.data.body;
+    const id = await ExperimentService.createExperiment(body);
+    res.status(201).json({ data: { id } });
   })
 );
 
 router.get(
-  '/experiments/:experimentId',
-  asyncHandler(async (req, res, next) => {
-    res.json({
-      data: `Fetched experiment with id ${req.params.experimentId}`
-    });
+  '/experiments/:experiment_id',
+  asyncHandler(async (req, res) => {
+    const experiment = await ExperimentService.getExperiment(
+      Number(req.params.experiment_id)
+    );
+    if (!experiment) {
+      res.sendStatus(404);
+    } else {
+      res.json({
+        data: experiment
+      });
+    }
   })
 );
 
 router.put(
-  '/experiments/:experimentId',
+  '/experiments/:experiment_id',
   validatorMiddleware(experimentValidator),
-  asyncHandler(async (req, res, next) => {
-    res.json({
-      data: `Updated experiment with id ${req.params.experimentId}`
-    });
+  asyncHandler(async (req, res) => {
+    await ExperimentService.updateExperiment(
+      Number(req.params.experiment_id),
+      req.data.body
+    );
+    res.sendStatus(200);
   })
 );
 

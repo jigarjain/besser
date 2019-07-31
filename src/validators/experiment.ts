@@ -1,18 +1,14 @@
+import { Experiment } from '../types/common';
+
 export const ErrorMap = {
   name: new Error('Experiment: `name` is missing or invalid'),
-  trafficAlloc: new Error(
-    'Experiment: `trafficAlloc` is invalid. It should be a positive integer in range of 0-100'
+  traffic_alloc: new Error(
+    'Experiment: `traffic_alloc` is invalid. It should be a positive integer in range of 0-100'
   ),
-  isRunning: new Error(
-    'Experiment: `isRunning` is invalid. It should be a boolean'
+  is_running: new Error(
+    'Experiment: `is_running` is invalid. It should be a boolean'
   )
 };
-
-interface SanitizedExperiment {
-  name: string;
-  trafficAlloc: number;
-  isRunning: boolean;
-}
 
 function validateExperimentName(str: any) {
   if (!str) {
@@ -29,30 +25,30 @@ function validateExperimentName(str: any) {
 }
 
 /**
- * validation will allow `trafficAlloc` to be undefined. In which case,
+ * validation will allow `traffic_alloc` to be undefined. In which case,
  * it will default to `100`. But if the key is specified, then it must
  * always be a valid number in the range of 0 - 100;
  */
 function validateExperimentTraffic(num: any) {
   if (num !== undefined && typeof num !== 'number') {
-    return ErrorMap.trafficAlloc;
+    return ErrorMap.traffic_alloc;
   }
 
   if (num !== undefined && (num < 0 || num > 100)) {
-    return ErrorMap.trafficAlloc;
+    return ErrorMap.traffic_alloc;
   }
 
   return num !== undefined ? Number(num) : 100;
 }
 
 /**
- * validation will allow `isRunning` to be undefined. In which case, it will
+ * validation will allow `is_running` to be undefined. In which case, it will
  * default to `true`. But if the key is specified, then it must always be a
  * valid boolean
  */
 function validateIsRunning(flag: any) {
   if (flag !== undefined && typeof flag !== 'boolean') {
-    return ErrorMap.isRunning;
+    return ErrorMap.is_running;
   }
 
   return flag !== undefined ? Boolean(flag) : true;
@@ -62,11 +58,12 @@ function validateIsRunning(flag: any) {
  * This function is invoked to perform validation when receiving client input for creating a new experiment
  */
 export default function validateNewExperiment(body: any) {
-  const { name, trafficAlloc, isRunning } = body;
+  const { name, traffic_alloc, is_running } = body;
   const sanitized: Record<string, any> = {
     name: validateExperimentName(name),
-    trafficAlloc: validateExperimentTraffic(trafficAlloc),
-    isRunning: validateIsRunning(isRunning)
+    traffic_alloc: validateExperimentTraffic(traffic_alloc),
+    is_running: validateIsRunning(is_running),
+    is_deleted: false
   };
 
   const errors = [];
@@ -81,5 +78,5 @@ export default function validateNewExperiment(body: any) {
     throw errors as [Error];
   }
 
-  return sanitized as SanitizedExperiment;
+  return sanitized as Partial<Experiment>;
 }

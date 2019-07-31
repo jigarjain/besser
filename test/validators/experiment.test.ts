@@ -6,8 +6,8 @@ describe('Experiment Validator', () => {
   beforeEach(() => {
     body = {
       name: 'Test Exp',
-      trafficAlloc: 42,
-      isRunning: false
+      traffic_alloc: 42,
+      is_running: false
     };
   });
 
@@ -24,58 +24,60 @@ describe('Experiment Validator', () => {
     expect(() => experimentValidator(body)).toThrow(ErrorMap.name.message);
   });
 
-  it('should throw error on invalid `trafficAlloc`', () => {
-    // When trafficAlloc is string;
-    body.trafficAlloc = '';
+  it('should throw error on invalid `traffic_alloc`', () => {
+    // When traffic_alloc is string;
+    body.traffic_alloc = '';
 
     expect(() => experimentValidator(body)).toThrow(
-      ErrorMap.trafficAlloc.message
+      ErrorMap.traffic_alloc.message
     );
   });
 
-  it('should throw error when `trafficAlloc` is negative', () => {
-    body.trafficAlloc = -2;
+  it('should throw error when `traffic_alloc` is negative', () => {
+    body.traffic_alloc = -2;
 
     expect(() => experimentValidator(body)).toThrow(
-      ErrorMap.trafficAlloc.message
+      ErrorMap.traffic_alloc.message
     );
   });
 
-  it('should throw error when `trafficAlloc` is over 100', () => {
-    body.trafficAlloc = 100.2;
+  it('should throw error when `traffic_alloc` is over 100', () => {
+    body.traffic_alloc = 100.2;
 
     expect(() => experimentValidator(body)).toThrow(
-      ErrorMap.trafficAlloc.message
+      ErrorMap.traffic_alloc.message
     );
   });
 
-  it('should throw error when `trafficAlloc` is negative', () => {
-    body.trafficAlloc = -2;
+  it('should throw error when `traffic_alloc` is negative', () => {
+    body.traffic_alloc = -2;
 
     expect(() => experimentValidator(body)).toThrow(
-      ErrorMap.trafficAlloc.message
+      ErrorMap.traffic_alloc.message
     );
   });
 
-  it('should set default `trafficAlloc` when its missing', () => {
-    delete body.trafficAlloc;
+  it('should set default `traffic_alloc` when its missing', () => {
+    delete body.traffic_alloc;
 
     expect(experimentValidator(body)).toMatchObject({
-      trafficAlloc: 100
+      traffic_alloc: 100
     });
   });
 
-  it('should throw error on invalid `isRunning`', () => {
-    body.isRunning = '';
+  it('should throw error on invalid `is_running`', () => {
+    body.is_running = '';
 
-    expect(() => experimentValidator(body)).toThrow(ErrorMap.isRunning.message);
+    expect(() => experimentValidator(body)).toThrow(
+      ErrorMap.is_running.message
+    );
   });
 
-  it('should set the default `isRunning` to true', () => {
-    delete body.isRunning;
+  it('should set the default `is_running` to true', () => {
+    delete body.is_running;
 
     expect(experimentValidator(body)).toMatchObject({
-      isRunning: true
+      is_running: true
     });
   });
 

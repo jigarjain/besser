@@ -68,3 +68,9 @@ export const errorHandler = ((
   res.status(500);
   res.json({ errors: [err.message] });
 }) as ErrorRequestHandler;
+
+/**
+ * This is a 404 error handler which is invoked when none of the routes match
+ */
+export const notFoundHandler = (req: Request, res: Response) =>
+  res.sendStatus(404);

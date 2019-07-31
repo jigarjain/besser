@@ -14,7 +14,7 @@ import Experiment from './controllers/ExperimentController';
 import Goal from './controllers/GoalController';
 
 // Other middlewares
-import { errorHandler } from './utils/middlewares';
+import { errorHandler, notFoundHandler } from './utils/middlewares';
 
 // Create a new express application instance
 const app = express();
@@ -46,6 +46,7 @@ app.use(Experiment);
 app.use(Goal);
 
 // Setting up global error handler
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Setting up
