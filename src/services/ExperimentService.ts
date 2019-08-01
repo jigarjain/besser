@@ -1,5 +1,10 @@
-import ExperimentModel from '../models/ExperimentModel';
 import { Experiment } from '../types/common';
+import Container, { ModelTypes } from '../inversify.config';
+import { ExperimentModelInterface } from '../models/ExperimentModel';
+
+const ExperimentModel = Container.get<ExperimentModelInterface>(
+  ModelTypes.ExperimentModel
+);
 
 export default {
   async getAllExperiments() {

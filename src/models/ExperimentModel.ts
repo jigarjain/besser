@@ -1,38 +1,55 @@
+import { injectable } from 'inversify';
 import db from '../dbConnection';
 import { Experiment } from '../types/common';
 
-const table = 'experiments';
-
-export default {
-  async getExperiments() {
-    return await db.select().from<Experiment>(table);
-  },
+export interface ExperimentModelInterface {
+  /**
+   * Returns a Promise which resolves to an array of experiments
+   */
+  getExperiments(): Promise<Experiment[]>;
 
   /**
-   * Returns a Promise which resolves to an id of a newly created Experiment`
+   * Returns a Promise which resolves to a newly created experiment `id`
    */
-  async createExperiment(experiment: Partial<Experiment>) {
-    const ids = await db(table)
+  createExperiment(experiment: Partial<Experiment>): Promise<number>;
+
+  getExperiment(experiment_id: number): Promise<Experiment>;
+
+  /**
+   * Returns a Promise which resolves to an number indicating the number of row which were updated
+   */
+  updateExperiment(
+    experiment_id: number,
+    experiment: Partial<Experiment>
+  ): Promise<number>;
+}
+
+@injectable()
+export default class implements ExperimentModelInterface {
+  private readonly table = 'experiments';
+
+  public async getExperiments() {
+    return await db.select().from(this.table);
+  }
+
+  public async createExperiment(experiment: Partial<Experiment>) {
+    const ids = await db(this.table)
       .insert(experiment)
       .returning('id');
-    return ids[0] as Pick<Experiment, 'id'>;
-  },
+    return ids[0];
+  }
 
-  async getExperiment(experiment_id: number) {
-    const experiments = await db(table)
-      .where<Experiment[]>('id', experiment_id)
+  public async getExperiment(experiment_id: number) {
+    const experiments = await db(this.table)
+      .where('id', experiment_id)
       .limit(1);
-    return experiments[0];
-  },
 
-  /**
-   *
-   * Returns a Promise which resolves to an number indicating the number of row
-   * which were updated
-   */
-  async updateExperiment(experiment_id: number, experiment: Experiment) {
-    return await db(table)
-      .where<Experiment>('id', experiment_id)
+    return experiments[0];
+  }
+
+  public async updateExperiment(experiment_id: number, experiment: Experiment) {
+    return await db(this.table)
+      .where('id', experiment_id)
       .update(experiment);
   }
-};
+}
