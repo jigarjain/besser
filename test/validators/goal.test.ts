@@ -5,7 +5,8 @@ describe('Goal Validator', () => {
 
   beforeEach(() => {
     body = {
-      name: 'Test Goal'
+      name: 'Test Goal',
+      type: 'CUSTOM'
     };
   });
 

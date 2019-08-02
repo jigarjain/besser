@@ -1,10 +1,8 @@
+import { Goal } from '../types/common';
+
 export const ErrorMap = {
   name: new Error('Goal: `name` of the goal is missing or invalid')
 };
-
-interface SanitizedGoal {
-  name: string;
-}
 
 function validateGoalName(str: any) {
   if (!str) {
@@ -21,12 +19,20 @@ function validateGoalName(str: any) {
 }
 
 /**
+ * We always set `CUSTOM` as the goal type which is received by the user
+ */
+function validateGoalType() {
+  return 'CUSTOM';
+}
+
+/**
  * This function is invoked for performing validations when receiving client input for creating a new goal,
  */
 export default function validateNewGoal(body: any) {
   const { name } = body;
   const sanitized: Record<string, any> = {
-    name: validateGoalName(name)
+    name: validateGoalName(name),
+    type: validateGoalType()
   };
 
   const errors = [];
@@ -41,5 +47,5 @@ export default function validateNewGoal(body: any) {
     throw errors as [Error];
   }
 
-  return sanitized as SanitizedGoal;
+  return sanitized as Partial<Goal>;
 }

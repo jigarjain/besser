@@ -1,28 +1,55 @@
+import { injectable, inject, LazyServiceIdentifer } from 'inversify';
 import { Experiment } from '../types/common';
-import Container, { ModelTypes } from '../inversify.config';
 import { ExperimentModelInterface } from '../models/ExperimentModel';
+import { ModelTypes } from '../container';
 
-const ExperimentModel = Container.get<ExperimentModelInterface>(
-  ModelTypes.ExperimentModel
-);
+export interface ExperimentServiceInterface {
+  /**
+   * Returns a Promise which resolves to a list of Experiments
+   */
+  getAllExperiments(): Promise<Experiment[]>;
 
-export default {
-  async getAllExperiments() {
-    return await ExperimentModel.getExperiments();
-  },
+  createExperiment(experiment: Partial<Experiment>): Promise<number>;
 
-  async createExperiment(experiment: Partial<Experiment>) {
-    return await ExperimentModel.createExperiment(experiment);
-  },
+  getExperiment(experiment_id: number): Promise<Experiment>;
 
-  async getExperiment(experiment_id: number) {
-    return await ExperimentModel.getExperiment(experiment_id);
-  },
+  updateExperiment(
+    experiment_id: number,
+    experiment: Partial<Experiment>
+  ): Promise<void>;
+}
 
-  async updateExperiment(experiment_id: number, experiment: Experiment) {
-    // Delete the id from the experiment object as it is passed separately
+@injectable()
+export default class ExperimentService implements ExperimentServiceInterface {
+  private _ExperimentModel: ExperimentModelInterface;
+
+  /**
+   * We use `LazyServiceIdentifier` here due to cyclic dependency
+   * https://github.com/inversify/InversifyJS/blob/master/wiki/circular_dependencies.md
+   */
+  public constructor(
+    @inject(new LazyServiceIdentifer(() => ModelTypes.ExperimentModel))
+    experimentModel: ExperimentModelInterface
+  ) {
+    this._ExperimentModel = experimentModel;
+  }
+
+  public async getAllExperiments() {
+    return await this._ExperimentModel.getExperiments();
+  }
+
+  public async createExperiment(experiment: Partial<Experiment>) {
+    return await this._ExperimentModel.createExperiment(experiment);
+  }
+
+  public async getExperiment(experiment_id: number) {
+    return await this._ExperimentModel.getExperiment(experiment_id);
+  }
+
+  public async updateExperiment(experiment_id: number, experiment: Experiment) {
+    // Delete the id to prevent from experiment.id getting tampered in DB
     delete experiment.id;
 
-    return await ExperimentModel.updateExperiment(experiment_id, experiment);
+    await this._ExperimentModel.updateExperiment(experiment_id, experiment);
   }
-};
+}

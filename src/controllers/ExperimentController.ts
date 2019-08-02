@@ -1,10 +1,14 @@
 import { Router } from 'express';
+import { ExperimentServiceInterface } from '../services/ExperimentService';
 import { asyncHandler, validatorMiddleware } from '../utils/middlewares';
 import experimentValidator from '../validators/experiment';
-import ExperimentService from '../services/ExperimentService';
+import Container, { ServiceTypes } from '../container';
 import { Experiment } from '../types/common';
 
 const router = Router();
+const ExperimentService = Container.get<ExperimentServiceInterface>(
+  ServiceTypes.ExperimentService
+);
 
 router.get(
   '/experiments',

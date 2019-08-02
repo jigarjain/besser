@@ -11,7 +11,7 @@ export interface GoalModelInterface {
   /**
    * Returns a Promise which resolves to a newly created Goal `id`
    */
-  createGoal(goal: Partial<Goal>): Promise<Goal>;
+  createGoal(goal: Partial<Goal>): Promise<number>;
 
   /**
    * Returns a Promise which resolves to a Goal
