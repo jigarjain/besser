@@ -3,10 +3,10 @@ import { Experiment } from '../types/common';
 export const ErrorMap = {
   name: new Error('Experiment: `name` is missing or invalid'),
   traffic_alloc: new Error(
-    'Experiment: `traffic_alloc` is invalid. It should be a positive integer in range of 0-100'
+    'Experiment: `traffic_alloc` is invalid. It must be a positive integer in range of 0-100'
   ),
   is_running: new Error(
-    'Experiment: `is_running` is invalid. It should be a boolean'
+    'Experiment: `is_running` is invalid. It must be a boolean'
   )
 };
 
