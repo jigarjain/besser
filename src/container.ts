@@ -7,7 +7,12 @@ import VariationModel, {
   VariationModelInterface
 } from './models/VariationModel';
 import GoalModel, { GoalModelInterface } from './models/GoalModel';
-import ExperimentService, { ExperimentServiceInterface } from './services/ExperimentService';
+import ExperimentService, {
+  ExperimentServiceInterface
+} from './services/ExperimentService';
+import VariationService, {
+  VariationServiceInterface
+} from './services/VariationService';
 import GoalService, { GoalServiceInterface } from './services/GoalService';
 
 export const ModelTypes = {
@@ -18,8 +23,9 @@ export const ModelTypes = {
 
 export const ServiceTypes = {
   ExperimentService: Symbol.for('ExperimentService'),
-  GoalService: Symbol.for('GoalService'),
-}
+  VariationService: Symbol.for('VariationService'),
+  GoalService: Symbol.for('GoalService')
+};
 
 const container = new Container();
 
@@ -33,7 +39,12 @@ container
 container.bind<GoalModelInterface>(ModelTypes.GoalModel).to(GoalModel);
 
 // Bind services to container
-container.bind<ExperimentServiceInterface>(ServiceTypes.ExperimentService).to(ExperimentService);
+container
+  .bind<ExperimentServiceInterface>(ServiceTypes.ExperimentService)
+  .to(ExperimentService);
+container
+  .bind<VariationServiceInterface>(ServiceTypes.VariationService)
+  .to(VariationService);
 container.bind<GoalServiceInterface>(ServiceTypes.GoalService).to(GoalService);
 
 export default container;

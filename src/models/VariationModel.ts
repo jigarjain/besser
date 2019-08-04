@@ -12,7 +12,12 @@ export interface VariationModelInterface {
   /**
    * Returns a Promise which resolves to a newly created Variation `id`
    */
-  createVariation(variation: Partial<Variation>): Promise<Variation>;
+  createVariation(variation: Partial<Variation>): Promise<number>;
+
+  /**
+   * Returns a Promise which resolves to a Vatiation
+   */
+  getVariation(variation_id: number): Promise<Variation>;
 
   /**
    * Returns a Promise which resolves to number of rows updated
@@ -34,7 +39,7 @@ export default class implements VariationModelInterface {
       .where('experiment_id', experiment_id);
   }
 
-  public async createVariation(variation: Variation) {
+  public async createVariation(variation: Partial<Variation>) {
     const ids = await db(this.table)
       .insert(variation)
       .returning('id');
@@ -50,7 +55,7 @@ export default class implements VariationModelInterface {
 
   public async updateVariation(variation_id: number, variation: Variation) {
     return await db(this.table)
-      .where('id', variation.id)
+      .where('id', variation_id)
       .update(variation);
   }
 }

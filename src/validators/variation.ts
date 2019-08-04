@@ -2,8 +2,9 @@ import { Variation } from '../types/common';
 
 export const ErrorMap = {
   variations: new Error(
-    'Variation: It is required. Must be a non-empty array of variations object'
+    'Variation: It is required & must be a non-empty array of variation object'
   ),
+  id: new Error('Variation: `id` must be numeric'),
   name: new Error('Variation: `name` is missing or invalid'),
   is_control: new Error(
     'Variation: `is_control` is invalid. It must be a boolean & there must exist exactly one variation where `is_control` is `true`'
@@ -26,17 +27,23 @@ function validateVariationName(str: any) {
     return ErrorMap.name;
   }
 
-  const name = `${str}`.trim();
-
-  if (name.length === 0) {
+  if (`${str}`.trim().length === 0) {
     return ErrorMap.name;
   }
 
   return;
 }
 
+function validateVariationId(id: any) {
+  if (id && typeof id !== 'number') {
+    return ErrorMap.id;
+  }
+
+  return;
+}
+
 /**
- * Given a list of variations for creation/updation, there should exists atleast
+ * Given a list of variations for creation/updation, there should exists exactly
  * one variation whose `is_control` is set to `true`. The property `is_control` is
  * optional but if set, it should only be a boolean value
  */
@@ -93,7 +100,10 @@ export default function validateVariations(variations: any) {
   }
 
   // Validate variation names
-  const errors = variations.map(v => validateVariationName(v.name));
+  let errors = variations.map(v => validateVariationName(v.name));
+
+  // Validate variation ids
+  errors = errors.concat(variations.map(v => validateVariationId(v.id)));
 
   // Validate `is_control`
   errors.push(validateIsControlFlag(variations as [any]));
@@ -107,8 +117,9 @@ export default function validateVariations(variations: any) {
     throw filteredErrors as Error[];
   }
 
-  const sanitized = variations.map(v => {
+  const sanitized = variations.map(({ id, ...v }) => {
     return {
+      id,
       name: v.name.trim(),
       is_control: Boolean(v.is_control),
       is_active: Boolean(v.is_active)

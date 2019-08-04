@@ -1,13 +1,18 @@
 import { Router } from 'express';
-import { ExperimentServiceInterface } from '../services/ExperimentService';
 import { asyncHandler, validatorMiddleware } from '../utils/middlewares';
 import experimentValidator from '../validators/experiment';
+import variationValidator from '../validators/variation';
 import Container, { ServiceTypes } from '../container';
-import { Experiment } from '../types/common';
+import { ExperimentServiceInterface } from '../services/ExperimentService';
+import { VariationServiceInterface } from '../services/VariationService';
+import { Experiment, Variation } from '../types/common';
 
 const router = Router();
 const ExperimentService = Container.get<ExperimentServiceInterface>(
   ServiceTypes.ExperimentService
+);
+const VariationService = Container.get<VariationServiceInterface>(
+  ServiceTypes.VariationService
 );
 
 router.get(
@@ -53,6 +58,57 @@ router.put(
       req.data.body
     );
     res.sendStatus(200);
+  })
+);
+
+router.get(
+  '/experiments/:experiment_id/variations',
+  asyncHandler(async (req, res, next) => {
+    try {
+      const variations = await VariationService.getVariationsForExperiment(
+        Number(req.params.experiment_id)
+      );
+
+      res.json({ data: variations });
+    } catch (err) {
+      next(err);
+    }
+  })
+);
+
+router.post(
+  '/experiments/:experiment_id/variations',
+  validatorMiddleware(variationValidator),
+  asyncHandler(async (req, res, next) => {
+    try {
+      const variations: Partial<Variation>[] = req.data.body;
+      const variationIds = await VariationService.createVariations(
+        Number(req.params.experiment_id),
+        variations
+      );
+
+      res.json({ data: variationIds });
+    } catch (err) {
+      next(err);
+    }
+  })
+);
+
+router.put(
+  '/experiments/:experiment_id/variations',
+  validatorMiddleware(variationValidator),
+  asyncHandler(async (req, res, next) => {
+    try {
+      const variations: Partial<Variation>[] = req.data.body;
+      await VariationService.updateVariations(
+        Number(req.params.experiment_id),
+        variations
+      );
+
+      res.json({});
+    } catch (err) {
+      next(err);
+    }
   })
 );
 

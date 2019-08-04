@@ -63,8 +63,6 @@ export const errorHandler = ((
     return next(err);
   }
 
-  req.log.error(err);
-
   res.status(500);
   res.json({ errors: [err.message] });
 }) as ErrorRequestHandler;
