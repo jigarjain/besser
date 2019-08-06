@@ -12,11 +12,13 @@ async function createExperimentsTable(knex: Knex) {
     table.boolean('is_deleted').defaultTo(false);
     table.timestamps(false, true);
   });
+  // eslint-disable-next-line no-console
   console.log('Created `experiments` table');
 }
 
 async function dropExperimentsTable(knex: Knex) {
   await knex.schema.dropTable('experiments');
+  // eslint-disable-next-line no-console
   console.log('Dropped `experiments` table');
 }
 
@@ -37,11 +39,13 @@ async function createVariationsTable(knex: Knex) {
       .onDelete('RESTRICT');
     table.timestamps(false, true);
   });
+  // eslint-disable-next-line no-console
   console.log('Created `variations` table');
 }
 
 async function dropVariationsTable(knex: Knex) {
   await knex.schema.dropTable('variations');
+  // eslint-disable-next-line no-console
   console.log('Dropped `variations` table');
 }
 
@@ -56,12 +60,13 @@ async function createGoalsTable(knex: Knex) {
     table.boolean('is_deleted').defaultTo(false);
     table.timestamps(false, true);
   });
-
+  // eslint-disable-next-line no-console
   console.log('Created `goals` table');
 }
 
 async function dropGoalsTable(knex: Knex) {
   await knex.schema.dropTable('goals');
+  // eslint-disable-next-line no-console
   console.log('Dropped `goals` table');
 }
 
@@ -69,6 +74,7 @@ export async function up(knex: Knex): Promise<any> {
   await createExperimentsTable(knex);
   await createVariationsTable(knex);
   await createGoalsTable(knex);
+  // eslint-disable-next-line no-console
   console.log('All done !');
 }
 
@@ -76,5 +82,6 @@ export async function down(knex: Knex): Promise<any> {
   await dropGoalsTable(knex);
   await dropVariationsTable(knex);
   await dropExperimentsTable(knex);
+  // eslint-disable-next-line no-console
   console.log('All done !');
 }
