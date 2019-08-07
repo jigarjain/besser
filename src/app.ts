@@ -12,6 +12,7 @@ import logger from './logger';
 // Route Controllers
 import Experiment from './controllers/ExperimentController';
 import Goal from './controllers/GoalController';
+import Visitor from './controllers/VisitorController';
 
 // Other middlewares
 import { errorHandler, notFoundHandler } from './utils/middlewares';
@@ -44,6 +45,7 @@ app.use(
 // Setting up routes
 app.use(Experiment);
 app.use(Goal);
+app.use(Visitor);
 
 // Setting up global error handler
 app.use(notFoundHandler);
