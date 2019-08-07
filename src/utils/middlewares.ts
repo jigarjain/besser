@@ -20,7 +20,7 @@ export const asyncHandler = (fn: RouteHandlerFn) => (
 };
 
 type ValidatorFn = (
-  body: any,
+  body?: any,
   query?: any
 ) => {
   body?: any;

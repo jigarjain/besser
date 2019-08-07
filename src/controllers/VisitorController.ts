@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { asyncHandler } from '../utils/middlewares';
+import { asyncHandler, validatorMiddleware } from '../utils/middlewares';
+import visitorValidation from '../validators/visitor';
 
 const router = Router();
 
@@ -15,9 +16,10 @@ router.get(
 
 router.get(
   '/visitors/:visitor_id/activate',
+  validatorMiddleware(visitorValidation),
   asyncHandler(async (req, res) => {
-    const { experiment_ids } = req.query;
-    res.json({ data: `Activatings experiments: ${experiment_ids.toString()}` });
+    const { experiment_ids } = req.data.query;
+    res.json({ data: `Activatings experiments: ${experiment_ids.join(',')}` });
   })
 );
 
