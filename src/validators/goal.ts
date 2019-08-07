@@ -47,5 +47,7 @@ export default function validateNewGoal(body: any) {
     throw errors as [Error];
   }
 
-  return sanitized as Partial<Goal>;
+  return {
+    body: sanitized as Partial<Goal>
+  };
 }

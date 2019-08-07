@@ -78,5 +78,7 @@ export default function validateNewExperiment(body: any) {
     throw errors as [Error];
   }
 
-  return sanitized as Partial<Experiment>;
+  return {
+    body: sanitized as Partial<Experiment>
+  };
 }

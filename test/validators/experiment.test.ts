@@ -60,7 +60,7 @@ describe('Experiment Validator', () => {
   it('should set default `traffic_alloc` when its missing', () => {
     delete body.traffic_alloc;
 
-    expect(experimentValidator(body)).toMatchObject({
+    expect(experimentValidator(body).body).toMatchObject({
       traffic_alloc: 100
     });
   });
@@ -76,12 +76,12 @@ describe('Experiment Validator', () => {
   it('should set the default `is_running` to true', () => {
     delete body.is_running;
 
-    expect(experimentValidator(body)).toMatchObject({
+    expect(experimentValidator(body).body).toMatchObject({
       is_running: true
     });
   });
 
   it('should not throw any error when correct data passed', () => {
-    expect(experimentValidator(body)).toMatchObject(body);
+    expect(experimentValidator(body)).toMatchObject({ body });
   });
 });

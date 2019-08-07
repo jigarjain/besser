@@ -19,25 +19,32 @@ export const asyncHandler = (fn: RouteHandlerFn) => (
   Promise.resolve(fn(req, res, next)).catch(next);
 };
 
-type ValidatorFn = (body: any) => any;
+type ValidatorFn = (
+  body: any,
+  query?: any
+) => {
+  body?: any;
+  query?: any;
+};
 
 /**
  * This is a middleware for validations. A validation function(`validatorFn`)
- * can be passed to this middlware which will receive the `req.body` as an
- * argument. The `validatorFn` must return the sanitized result on validation
+ * can be passed to this middlware which will receive the `req.body` & `req.query`
+ * as arguments. The `validatorFn` must return the sanitized result on validation
  * success or should throw error(s) on failure. This middleware will set the
- * sanitized result on `req.data.body` on success & pass the control to next
- * middleware or it will respond with validation errors & finish the request.
+ * sanitized result object on `req.data.body` & `req.data.query` on success & pass
+ * the control to next middleware or it will respond with validation errors &
+ * finish the request.
  */
 export const validatorMiddleware = (validatorFn: ValidatorFn) => (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  Promise.resolve(req.body)
-    .then(validatorFn)
-    .then(sanitizedData => {
-      req.data.body = sanitizedData;
+  Promise.resolve(validatorFn(req.body, req.query))
+    .then(({ body, query }) => {
+      req.data.body = body || {};
+      req.data.query = query || {};
       next();
     })
     .catch((err: Error | [Error]) => {

@@ -126,5 +126,7 @@ export default function validateVariations(variations: any) {
     };
   });
 
-  return sanitized as Partial<Variation>;
+  return {
+    body: sanitized as Partial<Variation>
+  };
 }

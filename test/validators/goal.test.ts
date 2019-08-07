@@ -24,6 +24,6 @@ describe('Goal Validator', () => {
   });
 
   it('should not throw any error when correct data passed', () => {
-    expect(goalValidator(body)).toMatchObject(body);
+    expect(goalValidator(body)).toMatchObject({ body });
   });
 });

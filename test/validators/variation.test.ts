@@ -105,10 +105,10 @@ describe('Variation Validator', () => {
   it('should not throw error when one `is_active` is set to false while the other is set to `true`', () => {
     body[0].is_active = false;
 
-    expect(variationValidator(body)).toMatchObject(body);
+    expect(variationValidator(body)).toMatchObject({ body });
   });
 
   it('should not throw any error when correct data passed', () => {
-    expect(variationValidator(body)).toMatchObject(body);
+    expect(variationValidator(body)).toMatchObject({ body });
   });
 });
