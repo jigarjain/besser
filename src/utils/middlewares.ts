@@ -30,30 +30,29 @@ type ValidatorFn = (
 /**
  * This is a middleware for validations. A validation function(`validatorFn`)
  * can be passed to this middlware which will receive the `req.body` & `req.query`
- * as arguments. The `validatorFn` must return the sanitized result on validation
- * success or should throw error(s) on failure. This middleware will set the
- * sanitized result object on `req.data.body` & `req.data.query` on success & pass
- * the control to next middleware or it will respond with validation errors &
- * finish the request.
+ * as arguments. The `validatorFn` must return the sanitized `body` & `query`
+ * on validation success or should throw error(s) on failure. This middleware
+ * will set the sanitized `body` & `query` on `req.data` & pass the control to
+ * next middleware or it will respond with validation errors & finish the request.
  */
-export const validatorMiddleware = (validatorFn: ValidatorFn) => (
+export const validatorMiddleware = (validatorFn: ValidatorFn) => async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  Promise.resolve(validatorFn(req.body, req.query))
-    .then(({ body, query }) => {
-      req.data.body = body || {};
-      req.data.query = query || {};
-      next();
-    })
-    .catch((err: Error | [Error]) => {
-      // To respect the JSONAPI format, we always send the validation errors
-      // as an array. This gives the validatorFn a flexibility to either return
-      // array of Error object or a single Error object
-      const errors = Array.isArray(err) ? err : [err];
-      res.status(422).json({ errors: errors.map(e => e.message) });
-    });
+  try {
+    const { body, query } = await validatorFn(req.body, req.query);
+    req.data.body = body || {};
+    req.data.query = query || {};
+    next();
+  } catch (err) {
+    const error: Error | [Error] = err;
+    // To respect the JSONAPI format, we always send the validation errors
+    // as an array. This gives the validatorFn a flexibility to either return
+    // array of Error object or a single Error object
+    const errors = Array.isArray(error) ? error : [error];
+    res.status(422).json({ errors: errors.map(e => e.message) });
+  }
 };
 
 /**

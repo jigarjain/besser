@@ -44,7 +44,7 @@ export default function validateNewGoal(body: any) {
   }
 
   if (errors.length) {
-    throw errors as [Error];
+    throw errors as Error[];
   }
 
   return {
