@@ -18,14 +18,6 @@ export interface VariationModelInterface {
    * Returns a Promise which resolves to a Vatiation
    */
   getVariation(variation_id: number): Promise<Variation>;
-
-  /**
-   * Returns a Promise which resolves to number of rows updated
-   */
-  updateVariation(
-    variation_id: number,
-    variation: Partial<Variation>
-  ): Promise<number>;
 }
 
 @injectable()
@@ -51,11 +43,5 @@ export default class implements VariationModelInterface {
       .where('id', variation_id)
       .limit(1);
     return variations[0];
-  }
-
-  public async updateVariation(variation_id: number, variation: Variation) {
-    return await db(this.table)
-      .where('id', variation_id)
-      .update(variation);
   }
 }

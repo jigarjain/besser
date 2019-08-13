@@ -1,5 +1,4 @@
 import { injectable, inject, LazyServiceIdentifer } from 'inversify';
-import _ from 'lodash';
 import { VariationModelInterface } from '../models/VariationModel';
 import { ExperimentServiceInterface } from '../services/ExperimentService';
 import { ModelTypes, ServiceTypes } from '../container';
@@ -18,11 +17,6 @@ export interface VariationServiceInterface {
     experiment_id: number,
     variations: Partial<Variation>[]
   ): Promise<number[]>;
-
-  updateVariations(
-    experiment_id: number,
-    variations: Partial<Variation>[]
-  ): Promise<void>;
 }
 
 @injectable()
@@ -97,58 +91,5 @@ export default class VariationService implements VariationServiceInterface {
     );
 
     return await Promise.all(inserts);
-  }
-
-  public async updateVariations(
-    experiment_id: number,
-    variations: Partial<Variation>[]
-  ) {
-    await this.runExperimentCheck(experiment_id);
-
-    const existingVariations = await this._VariationModel.getVariationsByExperimentId(
-      experiment_id
-    );
-
-    const variationToCreate = variations.filter(v => !v.id);
-    const variationsToUpdate = variations.filter(v => v.id);
-
-    /**
-     * Because we expect to receive the entire variations list again for update,
-     * we must check whether the ones which we receive that has ids are same as
-     * the ones which exist in our DB.
-     * Basically, we should receive atleast all the variations for update which
-     * exists in our DB
-     * */
-    const existingVariationIds = existingVariations.map(v => v.id);
-    const variationsToUpdateIds = variationsToUpdate.map(v => v.id);
-
-    if (!_.isEqual(existingVariationIds, variationsToUpdateIds)) {
-      throw new Error(
-        'Some Variation(s) are inconsistent with the existing variations. For updating, please send the entire list of variations'
-      );
-    }
-
-    // Create insert requests
-    const inserts = variationToCreate.map(v => {
-      const variation = {
-        ...v,
-        experiment_id
-      };
-
-      return this._VariationModel.createVariation(variation);
-    });
-
-    // Create update requests
-    const updates = variationsToUpdate.map(v => {
-      const variationId = v.id as number;
-      const variation = {
-        ...v,
-        experiment_id
-      };
-
-      return this._VariationModel.updateVariation(variationId, variation);
-    });
-
-    await Promise.all([...inserts, ...updates]);
   }
 }

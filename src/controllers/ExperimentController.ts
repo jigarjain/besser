@@ -94,22 +94,4 @@ router.post(
   })
 );
 
-router.put(
-  '/experiments/:experiment_id/variations',
-  validatorMiddleware(variationValidator),
-  asyncHandler(async (req, res, next) => {
-    try {
-      const variations: Partial<Variation>[] = req.data.body;
-      await VariationService.updateVariations(
-        Number(req.params.experiment_id),
-        variations
-      );
-
-      res.json({});
-    } catch (err) {
-      next(err);
-    }
-  })
-);
-
 export default router;

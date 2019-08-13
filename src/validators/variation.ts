@@ -4,7 +4,6 @@ export const ErrorMap = {
   variations: new Error(
     'Variation: It is required & must be a non-empty array of variation object'
   ),
-  id: new Error('Variation: `id` must be numeric'),
   name: new Error('Variation: `name` is missing or invalid'),
   is_control: new Error(
     'Variation: `is_control` is invalid. It must be a boolean & there must exist exactly one variation where `is_control` is `true`'
@@ -29,14 +28,6 @@ function validateVariationName(str: any) {
 
   if (`${str}`.trim().length === 0) {
     return ErrorMap.name;
-  }
-
-  return;
-}
-
-function validateVariationId(id: any) {
-  if (id && typeof id !== 'number') {
-    return ErrorMap.id;
   }
 
   return;
@@ -102,9 +93,6 @@ export default function validateVariations(variations: any) {
   // Validate variation names
   let errors = variations.map(v => validateVariationName(v.name));
 
-  // Validate variation ids
-  errors = errors.concat(variations.map(v => validateVariationId(v.id)));
-
   // Validate `is_control`
   errors.push(validateIsControlFlag(variations as [any]));
 
@@ -117,9 +105,8 @@ export default function validateVariations(variations: any) {
     throw filteredErrors as Error[];
   }
 
-  const sanitized = variations.map(({ id, ...v }) => {
+  const sanitized = variations.map(v => {
     return {
-      id,
       name: v.name.trim(),
       is_control: Boolean(v.is_control),
       is_active: Boolean(v.is_active)
