@@ -18,12 +18,9 @@ export interface Variation {
   updated_at: string;
 }
 
-export type Goal_Type = 'IMPRESSION' | 'CUSTOM';
-
 export interface Goal {
   id: number;
   name: string;
-  type: Goal_Type;
   is_deleted: boolean;
   created_at: string;
   updated_at: string;

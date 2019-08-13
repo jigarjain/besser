@@ -19,20 +19,12 @@ function validateGoalName(str: any) {
 }
 
 /**
- * We always set `CUSTOM` as the goal type which is received by the user
- */
-function validateGoalType() {
-  return 'CUSTOM';
-}
-
-/**
  * This function is invoked for performing validations when receiving client input for creating a new goal,
  */
 export default function validateNewGoal(body: any) {
   const { name } = body;
   const sanitized: Record<string, any> = {
-    name: validateGoalName(name),
-    type: validateGoalType()
+    name: validateGoalName(name)
   };
 
   const errors = [];
