@@ -10,13 +10,14 @@ import {
 
 export interface VisitorModelInterface {
   /**
-   * Returns a Promise which resolves to Assignments for the visitor
+   * Returns all the assignments for the visitor from the DB irrespective
+   * of any flags set
    */
   getAllAssignmentsForVisitor(visitor_id: VisitorId): Promise<Assignment[]>;
 
   /**
    * Will only return those Assignments which are marked as 'ASSIGNED` & experiments
-   * are in running state & variation is active
+   * & variations which are in active state
    */
   getActiveAssignmentsForVisitor(
     visitor_id: VisitorId
@@ -32,7 +33,7 @@ export interface VisitorModelInterface {
   /**
    * Inserts a goal for tracking purpose. Returns a Promise which resolves to void
    */
-  trackGoal(visitor_goal: VisitorGoal): Promise<void>;
+  trackGoal(visitor_goal: Partial<VisitorGoal>): Promise<void>;
 }
 
 @injectable()

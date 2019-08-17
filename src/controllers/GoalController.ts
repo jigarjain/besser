@@ -14,7 +14,7 @@ router.get(
   '/goals',
   asyncHandler(async (req, res) => {
     const goals = await GoalService.getAllGoals();
-    res.json({ data: goals });
+    res.json({ data: { goals } });
   })
 );
 
@@ -36,7 +36,7 @@ router.get(
       res.sendStatus(404);
     } else {
       res.json({
-        data: goal
+        data: { goal }
       });
     }
   })

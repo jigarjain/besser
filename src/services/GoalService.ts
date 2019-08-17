@@ -1,19 +1,20 @@
 import { injectable, inject, LazyServiceIdentifer } from 'inversify';
-import { Goal } from '../types/common';
+import { Goal, GoalId } from '../types/common';
 import { ModelTypes } from '../container';
 import { GoalModelInterface } from '../models/GoalModel';
 
 export interface GoalServiceInterface {
   /**
-   * Returns a Promise which resolves to a list of Goals
+   * Returns a Promise which resolves to a list of all goals
+   * from the DB
    */
   getAllGoals(): Promise<Goal[]>;
 
-  createGoal(goal: Partial<Goal>): Promise<number>;
+  createGoal(goal: Partial<Goal>): Promise<GoalId>;
 
-  getGoal(goal_id: number): Promise<Goal>;
+  getGoal(goal_id: GoalId): Promise<Goal | undefined>;
 
-  updateGoal(goal_id: number, goal: Partial<Goal>): Promise<void>;
+  updateGoal(goal_id: GoalId, goal: Partial<Goal>): Promise<void>;
 }
 
 @injectable()
@@ -39,11 +40,11 @@ export default class GoalService implements GoalServiceInterface {
     return await this._GoalModel.createGoal(goal);
   }
 
-  public async getGoal(goal_id: number) {
+  public async getGoal(goal_id: GoalId) {
     return await this._GoalModel.getGoal(goal_id);
   }
 
-  public async updateGoal(goal_id: number, goal: Goal) {
+  public async updateGoal(goal_id: GoalId, goal: Goal) {
     // Delete the id to prevent from goal.id getting tampered in DB
     delete goal.id;
 

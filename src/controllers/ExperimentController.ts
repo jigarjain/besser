@@ -44,7 +44,7 @@ router.get(
       res.sendStatus(404);
     } else {
       res.json({
-        data: experiment
+        data: { experiment }
       });
     }
   })
@@ -70,7 +70,7 @@ router.get(
         Number(req.params.experiment_id)
       );
 
-      res.json({ data: variations });
+      res.json({ data: { variations } });
     } catch (err) {
       next(err);
     }
@@ -83,12 +83,12 @@ router.post(
   asyncHandler(async (req, res, next) => {
     try {
       const variations: Partial<Variation>[] = req.data.body;
-      const variationIds = await VariationService.createVariations(
+      const variation_ids = await VariationService.createVariations(
         Number(req.params.experiment_id),
         variations
       );
 
-      res.json({ data: variationIds });
+      res.json({ data: { variation_ids } });
     } catch (err) {
       next(err);
     }

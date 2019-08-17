@@ -1,27 +1,18 @@
 import { injectable } from 'inversify';
 import db from '../dbConnection';
-import { Goal } from '../types/common';
+import { Goal, GoalId } from '../types/common';
 
 export interface GoalModelInterface {
   /**
-   * Returns a Promise which resolves to a list of all goals
+   * Returns all goals from the DB
    */
   getGoals(): Promise<Goal[]>;
 
-  /**
-   * Returns a Promise which resolves to a newly created Goal `id`
-   */
-  createGoal(goal: Partial<Goal>): Promise<number>;
+  createGoal(goal: Partial<Goal>): Promise<GoalId>;
 
-  /**
-   * Returns a Promise which resolves to a Goal
-   */
-  getGoal(goal_id: number): Promise<Goal>;
+  getGoal(goal_id: GoalId): Promise<Goal | undefined>;
 
-  /**
-   * Returns a Promise which resolves to number of rows updated
-   */
-  updateGoal(goal_id: number, goal: Partial<Goal>): Promise<number>;
+  updateGoal(goal_id: GoalId, goal: Partial<Goal>): Promise<number>;
 }
 
 @injectable()
@@ -39,14 +30,12 @@ export default class implements GoalModelInterface {
     return ids[0];
   }
 
-  public async getGoal(goal_id: number) {
-    const goals = await db(this.table)
-      .where('id', goal_id)
-      .limit(1);
+  public async getGoal(goal_id: GoalId) {
+    const goals = await db(this.table).where('id', goal_id);
     return goals[0];
   }
 
-  public async updateGoal(goal_id: number, goal: Goal) {
+  public async updateGoal(goal_id: GoalId, goal: Goal) {
     return await db(this.table)
       .where('id', goal.id)
       .update(goal);

@@ -205,13 +205,22 @@ export default class VisitorService implements VisitorServiceInterface {
     const currentAssignments = await this._VisitorModel.getAllAssignmentsForVisitor(
       visitor_id
     );
+
     const experiments = await Promise.all(
-      experiment_ids.map(this._ExperimentService.getExperiment)
+      experiment_ids.map(exp_id =>
+        this._ExperimentService.getExperiment(exp_id)
+      )
     );
+
+    /**
+     * Remove undefined experiments received possibly due to incorrect experiment_ids
+     * passed to the API
+     */
+    const filteredExps = experiments.filter(e => Boolean(e)) as Experiment[];
 
     const unassignedExperiments = this.getUnAssignedExperiments(
       currentAssignments,
-      experiments
+      filteredExps
     );
 
     const generateAssignmentPromises = unassignedExperiments.map(

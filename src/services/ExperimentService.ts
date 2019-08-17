@@ -1,5 +1,5 @@
 import { injectable, inject, LazyServiceIdentifer } from 'inversify';
-import { Experiment } from '../types/common';
+import { Experiment, ExperimentId } from '../types/common';
 import { ExperimentModelInterface } from '../models/ExperimentModel';
 import { ModelTypes } from '../container';
 
@@ -9,12 +9,12 @@ export interface ExperimentServiceInterface {
    */
   getAllExperiments(): Promise<Experiment[]>;
 
-  createExperiment(experiment: Partial<Experiment>): Promise<number>;
+  createExperiment(experiment: Partial<Experiment>): Promise<ExperimentId>;
 
-  getExperiment(experiment_id: number): Promise<Experiment>;
+  getExperiment(experiment_id: ExperimentId): Promise<Experiment | undefined>;
 
   updateExperiment(
-    experiment_id: number,
+    experiment_id: ExperimentId,
     experiment: Partial<Experiment>
   ): Promise<void>;
 }
@@ -42,11 +42,14 @@ export default class ExperimentService implements ExperimentServiceInterface {
     return await this._ExperimentModel.createExperiment(experiment);
   }
 
-  public async getExperiment(experiment_id: number) {
+  public async getExperiment(experiment_id: ExperimentId) {
     return await this._ExperimentModel.getExperiment(experiment_id);
   }
 
-  public async updateExperiment(experiment_id: number, experiment: Experiment) {
+  public async updateExperiment(
+    experiment_id: ExperimentId,
+    experiment: Experiment
+  ) {
     // Delete the id to prevent from experiment.id getting tampered in DB
     delete experiment.id;
 

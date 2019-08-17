@@ -38,13 +38,14 @@ export default class VariationService implements VariationServiceInterface {
     this._ExperimentService = experimentService;
   }
 
-  // ToDo: Refactor this as @decorator
   private async runExperimentCheck(experiment_id: number) {
     const experiment = await this._ExperimentService.getExperiment(
       experiment_id
     );
 
-    // If experiment doesn't exist or is deleted, throw error
+    /**
+     * If experiment doesn't exist or is deleted, throw error
+     */
     if (!experiment || experiment.is_deleted) {
       throw new Error(`Experiment with id ${experiment_id} doesn't exist`);
     }
@@ -66,16 +67,17 @@ export default class VariationService implements VariationServiceInterface {
   ) {
     await this.runExperimentCheck(experiment_id);
 
-    // If variations are already created for this experiment, then we must
-    // not accept new variations from this endpoint. But rather use `updateVariations`
-    // to add more
+    /**
+     * If variations are already created for this experiment, then we must
+     * not accept new variations
+     */
     const existingVariations = await this._VariationModel.getVariationsByExperimentId(
       experiment_id
     );
 
     if (existingVariations.length) {
       throw new Error(
-        `Experiment with id ${experiment_id} already has some variations. Do you intend to add more variation? Use update(PUT) endpoint instead`
+        `Experiment with id ${experiment_id} already has some variations`
       );
     }
 

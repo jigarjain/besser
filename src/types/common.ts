@@ -7,7 +7,7 @@ export type AssignmentId = number;
 export type VisitorId = string;
 
 export interface Experiment {
-  id: number;
+  id: ExperimentId;
   name: string;
   /** Ranges from 0-100 */
   traffic_alloc: number;
@@ -36,7 +36,7 @@ export interface Goal {
 }
 
 export interface Assignment {
-  id?: AssignmentId;
+  id: AssignmentId;
   visitor_id: VisitorId;
   experiment_id: ExperimentId;
   variation_id?: VariationId;

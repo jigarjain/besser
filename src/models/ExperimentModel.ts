@@ -1,25 +1,20 @@
 import { injectable } from 'inversify';
 import db from '../dbConnection';
-import { Experiment } from '../types/common';
+import { Experiment, ExperimentId } from '../types/common';
 
 export interface ExperimentModelInterface {
   /**
-   * Returns a Promise which resolves to an array of experiments
+   * Returns *all* the experiments from the DB irrespective
+   * of any flags set
    */
   getExperiments(): Promise<Experiment[]>;
 
-  /**
-   * Returns a Promise which resolves to a newly created experiment `id`
-   */
-  createExperiment(experiment: Partial<Experiment>): Promise<number>;
+  createExperiment(experiment: Partial<Experiment>): Promise<ExperimentId>;
 
-  getExperiment(experiment_id: number): Promise<Experiment>;
+  getExperiment(experiment_id: ExperimentId): Promise<Experiment | undefined>;
 
-  /**
-   * Returns a Promise which resolves to an number indicating the number of row which were updated
-   */
   updateExperiment(
-    experiment_id: number,
+    experiment_id: ExperimentId,
     experiment: Partial<Experiment>
   ): Promise<number>;
 }
@@ -39,15 +34,16 @@ export default class implements ExperimentModelInterface {
     return ids[0];
   }
 
-  public async getExperiment(experiment_id: number) {
-    const experiments = await db(this.table)
-      .where('id', experiment_id)
-      .limit(1);
+  public async getExperiment(experiment_id: ExperimentId) {
+    const experiments = await db(this.table).where('id', experiment_id);
 
     return experiments[0];
   }
 
-  public async updateExperiment(experiment_id: number, experiment: Experiment) {
+  public async updateExperiment(
+    experiment_id: ExperimentId,
+    experiment: Experiment
+  ) {
     return await db(this.table)
       .where('id', experiment_id)
       .update(experiment);
