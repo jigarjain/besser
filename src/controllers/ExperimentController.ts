@@ -39,6 +39,7 @@ router.get(
     const experiment = await ExperimentService.getExperiment(
       Number(req.params.experiment_id)
     );
+
     if (!experiment) {
       res.sendStatus(404);
     } else {

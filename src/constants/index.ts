@@ -1,4 +1,4 @@
-export const GOAL_TYPE = {
-  IMPRESSION: 'IMPRESSION',
-  CUSTOM: 'CUSTOM'
-};
+export enum ASSIGNMENT_ACTION {
+  ASSIGNED = 'ASSIGNED',
+  IGNORED = 'IGNORED'
+}
