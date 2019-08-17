@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import db from '../dbConnection';
+import { DB_TABLE } from '../constants';
 import { Experiment, ExperimentId } from '../types/common';
 
 export interface ExperimentModelInterface {
@@ -21,21 +22,22 @@ export interface ExperimentModelInterface {
 
 @injectable()
 export default class implements ExperimentModelInterface {
-  private readonly table = 'experiments';
-
   public async getExperiments() {
-    return await db.select().from(this.table);
+    return await db.select().from(DB_TABLE.EXPERIMENTS);
   }
 
   public async createExperiment(experiment: Partial<Experiment>) {
-    const ids = await db(this.table)
+    const ids = await db(DB_TABLE.EXPERIMENTS)
       .insert(experiment)
       .returning('id');
     return ids[0];
   }
 
   public async getExperiment(experiment_id: ExperimentId) {
-    const experiments = await db(this.table).where('id', experiment_id);
+    const experiments = await db(DB_TABLE.EXPERIMENTS).where(
+      'id',
+      experiment_id
+    );
 
     return experiments[0];
   }
@@ -44,7 +46,7 @@ export default class implements ExperimentModelInterface {
     experiment_id: ExperimentId,
     experiment: Experiment
   ) {
-    return await db(this.table)
+    return await db(DB_TABLE.EXPERIMENTS)
       .where('id', experiment_id)
       .update(experiment);
   }

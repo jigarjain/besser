@@ -1,10 +1,8 @@
 import * as Knex from 'knex';
+import { DB_TABLE } from '../src/constants';
 
-/**
- * Creates a table for `experiments`
- */
 async function createExperimentsTable(knex: Knex) {
-  await knex.schema.createTable('experiments', table => {
+  await knex.schema.createTable(DB_TABLE.EXPERIMENTS, table => {
     table.increments('id').unsigned();
     table.string('name').notNullable();
     table.integer('traffic_alloc').defaultTo(100);
@@ -13,20 +11,17 @@ async function createExperimentsTable(knex: Knex) {
     table.timestamps(false, true);
   });
   // eslint-disable-next-line no-console
-  console.log('Created `experiments` table');
+  console.log(`Created ${DB_TABLE.EXPERIMENTS} table`);
 }
 
 async function dropExperimentsTable(knex: Knex) {
-  await knex.schema.dropTable('experiments');
+  await knex.schema.dropTable(DB_TABLE.EXPERIMENTS);
   // eslint-disable-next-line no-console
-  console.log('Dropped `experiments` table');
+  console.log(`Dropped ${DB_TABLE.EXPERIMENTS} table`);
 }
 
-/**
- * Creates a table for `variations`
- */
 async function createVariationsTable(knex: Knex) {
-  await knex.schema.createTable('variations', table => {
+  await knex.schema.createTable(DB_TABLE.VARIATIONS, table => {
     table.increments('id').unsigned();
     table.string('name').notNullable();
     table.boolean('is_control').notNullable();
@@ -34,26 +29,23 @@ async function createVariationsTable(knex: Knex) {
     table
       .integer('experiment_id')
       .references('id')
-      .inTable('experiments')
+      .inTable(DB_TABLE.EXPERIMENTS)
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT');
     table.timestamps(false, true);
   });
   // eslint-disable-next-line no-console
-  console.log('Created `variations` table');
+  console.log(`Created ${DB_TABLE.VARIATIONS} table`);
 }
 
 async function dropVariationsTable(knex: Knex) {
-  await knex.schema.dropTable('variations');
+  await knex.schema.dropTable(DB_TABLE.VARIATIONS);
   // eslint-disable-next-line no-console
-  console.log('Dropped `variations` table');
+  console.log(`Dropped ${DB_TABLE.VARIATIONS} table`);
 }
 
-/**
- * Creates a table for `goals`
- */
 async function createGoalsTable(knex: Knex) {
-  await knex.schema.createTable('goals', table => {
+  await knex.schema.createTable(DB_TABLE.GOALS, table => {
     table.increments('id').unsigned();
     table.string('name').notNullable();
     table.string('type').notNullable();
@@ -61,13 +53,13 @@ async function createGoalsTable(knex: Knex) {
     table.timestamps(false, true);
   });
   // eslint-disable-next-line no-console
-  console.log('Created `goals` table');
+  console.log(`Created ${DB_TABLE.GOALS} table`);
 }
 
 async function dropGoalsTable(knex: Knex) {
-  await knex.schema.dropTable('goals');
+  await knex.schema.dropTable(DB_TABLE.GOALS);
   // eslint-disable-next-line no-console
-  console.log('Dropped `goals` table');
+  console.log(`Dropped ${DB_TABLE.GOALS} table`);
 }
 
 export async function up(knex: Knex): Promise<any> {

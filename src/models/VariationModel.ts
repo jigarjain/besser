@@ -1,5 +1,6 @@
 import { injectable } from 'inversify';
 import db from '../dbConnection';
+import { DB_TABLE } from '../constants';
 import { Variation, VariationId, ExperimentId } from '../types/common';
 
 export interface VariationModelInterface {
@@ -14,24 +15,22 @@ export interface VariationModelInterface {
 
 @injectable()
 export default class implements VariationModelInterface {
-  private readonly table = 'variations';
-
   public async getVariationsByExperimentId(experiment_id: ExperimentId) {
     return await db
       .select()
-      .from(this.table)
+      .from(DB_TABLE.VARIATIONS)
       .where('experiment_id', experiment_id);
   }
 
   public async createVariation(variation: Partial<Variation>) {
-    const ids = await db(this.table)
+    const ids = await db(DB_TABLE.VARIATIONS)
       .insert(variation)
       .returning('id');
     return ids[0];
   }
 
   public async getVariation(variation_id: VariationId) {
-    const variations = await db(this.table).where('id', variation_id);
+    const variations = await db(DB_TABLE.VARIATIONS).where('id', variation_id);
     return variations[0];
   }
 }

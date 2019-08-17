@@ -1,18 +1,19 @@
 import * as Knex from 'knex';
+import { DB_TABLE } from '../src/constants';
 
 async function createVisitorsAssignmentTable(knex: Knex) {
-  await knex.schema.createTable('visitor_assignments', table => {
+  await knex.schema.createTable(DB_TABLE.VISITOR_ASSIGNMENTS, table => {
     table.increments('id').unsigned();
     table
       .integer('experiment_id')
       .references('id')
-      .inTable('experiments')
+      .inTable(DB_TABLE.EXPERIMENTS)
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT');
     table
       .integer('variation_id')
       .references('id')
-      .inTable('variations')
+      .inTable(DB_TABLE.VARIATIONS)
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT');
     table.enum('action', ['ASSIGNED', 'IGNORED']);
@@ -20,28 +21,28 @@ async function createVisitorsAssignmentTable(knex: Knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
   // eslint-disable-next-line no-console
-  console.log('Created `visitor_assignments` table');
+  console.log(`Created ${DB_TABLE.VISITOR_ASSIGNMENTS} table`);
 }
 
 async function dropVisitorsAssignmentTable(knex: Knex) {
-  await knex.schema.dropTable('visitor_assignments');
+  await knex.schema.dropTable(DB_TABLE.VISITOR_ASSIGNMENTS);
   // eslint-disable-next-line no-console
-  console.log('Dropped `visitor_assignments` table');
+  console.log(`Dropped ${DB_TABLE.VISITOR_ASSIGNMENTS} table`);
 }
 
 async function createVisitorGoalsTable(knex: Knex) {
-  await knex.schema.createTable('visitor_goals', table => {
+  await knex.schema.createTable(DB_TABLE.VISITOR_GOALS, table => {
     table.increments('id').unsigned();
     table
       .integer('visitor_assignment_id')
       .references('id')
-      .inTable('visitor_assignments')
+      .inTable(DB_TABLE.VISITOR_ASSIGNMENTS)
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT');
     table
       .integer('goal_id')
       .references('id')
-      .inTable('goals')
+      .inTable(DB_TABLE.GOALS)
       .onUpdate('RESTRICT')
       .onDelete('RESTRICT');
     table.string('device');
@@ -50,13 +51,13 @@ async function createVisitorGoalsTable(knex: Knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
   });
   // eslint-disable-next-line no-console
-  console.log('Created `visitor_goals` table');
+  console.log(`Created ${DB_TABLE.VISITOR_GOALS} table`);
 }
 
 async function dropVisitorGoalsTable(knex: Knex) {
-  await knex.schema.dropTable('visitor_goals');
+  await knex.schema.dropTable(DB_TABLE.VISITOR_GOALS);
   // eslint-disable-next-line no-console
-  console.log('Dropped `visitor_goals` table');
+  console.log(`Dropped ${DB_TABLE.VISITOR_GOALS} table`);
 }
 
 export async function up(knex: Knex): Promise<any> {
