@@ -17,6 +17,11 @@ export interface ExperimentServiceInterface {
     experiment_id: ExperimentId,
     experiment: Partial<Experiment>
   ): Promise<void>;
+
+  updateExperimentRunningFlag(
+    experiment_id: ExperimentId,
+    running_flag: boolean
+  ): Promise<number>;
 }
 
 @injectable()
@@ -54,5 +59,15 @@ export default class ExperimentService implements ExperimentServiceInterface {
     delete experiment.id;
 
     await this._ExperimentModel.updateExperiment(experiment_id, experiment);
+  }
+
+  public async updateExperimentRunningFlag(
+    experiment_id: ExperimentId,
+    running_flag: boolean
+  ) {
+    return await this._ExperimentModel.updateExperimentRunningFlag(
+      experiment_id,
+      running_flag
+    );
   }
 }

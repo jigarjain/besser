@@ -18,6 +18,11 @@ export interface ExperimentModelInterface {
     experiment_id: ExperimentId,
     experiment: Partial<Experiment>
   ): Promise<number>;
+
+  updateExperimentRunningFlag(
+    experiment_id: ExperimentId,
+    running_flag: boolean
+  ): Promise<number>;
 }
 
 @injectable()
@@ -49,5 +54,16 @@ export default class implements ExperimentModelInterface {
     return await db(DB_TABLE.EXPERIMENTS)
       .where('id', experiment_id)
       .update(experiment);
+  }
+
+  public async updateExperimentRunningFlag(
+    experiment_id: ExperimentId,
+    running_flag: boolean
+  ) {
+    return await db(DB_TABLE.EXPERIMENTS)
+      .where('id', experiment_id)
+      .update({
+        is_running: running_flag
+      });
   }
 }

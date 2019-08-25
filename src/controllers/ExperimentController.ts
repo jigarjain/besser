@@ -62,6 +62,18 @@ router.put(
   })
 );
 
+router.put(
+  '/updateexperimentflag/:experiment_id/:running_flag',
+  // validatorMiddleware(experimentValidator),
+  asyncHandler(async (req, res) => {
+    await ExperimentService.updateExperimentRunningFlag(
+      Number(req.params.experiment_id),
+      req.params.running_flag
+    );
+    res.sendStatus(200);
+  })
+);
+
 router.get(
   '/experiments/:experiment_id/variations',
   asyncHandler(async (req, res, next) => {
