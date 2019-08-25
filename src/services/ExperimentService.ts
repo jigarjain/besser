@@ -18,10 +18,7 @@ export interface ExperimentServiceInterface {
     experiment: Partial<Experiment>
   ): Promise<void>;
 
-  updateExperimentRunningFlag(
-    experiment_id: ExperimentId,
-    running_flag: boolean
-  ): Promise<number>;
+  deleteExperiment(experiment_id: ExperimentId): Promise<void>;
 }
 
 @injectable()
@@ -61,13 +58,22 @@ export default class ExperimentService implements ExperimentServiceInterface {
     await this._ExperimentModel.updateExperiment(experiment_id, experiment);
   }
 
-  public async updateExperimentRunningFlag(
-    experiment_id: ExperimentId,
-    running_flag: boolean
-  ) {
-    return await this._ExperimentModel.updateExperimentRunningFlag(
-      experiment_id,
-      running_flag
-    );
+  private async runExperimentCheck(experiment_id: number) {
+    const experiment = await this.getExperiment(experiment_id);
+
+    /**
+     * If experiment doesn't exist or is deleted, throw error
+     */
+    if (!experiment || experiment.is_deleted) {
+      throw new Error(`Experiment with id ${experiment_id} doesn't exist`);
+    }
+
+    return experiment;
+  }
+
+  public async deleteExperiment(experiment_id: ExperimentId) {
+    await this.runExperimentCheck(experiment_id);
+
+    await this._ExperimentModel.deleteExperiment(experiment_id);
   }
 }

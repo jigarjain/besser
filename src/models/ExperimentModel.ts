@@ -19,10 +19,7 @@ export interface ExperimentModelInterface {
     experiment: Partial<Experiment>
   ): Promise<number>;
 
-  updateExperimentRunningFlag(
-    experiment_id: ExperimentId,
-    running_flag: boolean
-  ): Promise<number>;
+  deleteExperiment(experiment_id: ExperimentId): Promise<number>;
 }
 
 @injectable()
@@ -56,14 +53,9 @@ export default class implements ExperimentModelInterface {
       .update(experiment);
   }
 
-  public async updateExperimentRunningFlag(
-    experiment_id: ExperimentId,
-    running_flag: boolean
-  ) {
+  public async deleteExperiment(experiment_id: ExperimentId) {
     return await db(DB_TABLE.EXPERIMENTS)
       .where('id', experiment_id)
-      .update({
-        is_running: running_flag
-      });
+      .update({ is_deleted: true });
   }
 }

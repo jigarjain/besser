@@ -62,14 +62,10 @@ router.put(
   })
 );
 
-router.put(
-  '/updateexperimentflag/:experiment_id/:running_flag',
-  // validatorMiddleware(experimentValidator),
+router.delete(
+  '/experiments/:experiment_id',
   asyncHandler(async (req, res) => {
-    await ExperimentService.updateExperimentRunningFlag(
-      Number(req.params.experiment_id),
-      req.params.running_flag
-    );
+    await ExperimentService.deleteExperiment(Number(req.params.experiment_id));
     res.sendStatus(200);
   })
 );
