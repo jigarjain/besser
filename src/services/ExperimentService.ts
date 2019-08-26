@@ -64,6 +64,8 @@ export default class ExperimentService implements ExperimentServiceInterface {
     /**
      * If experiment doesn't exist or is deleted, throw error
      */
+
+    //test
     if (!experiment || experiment.is_deleted) {
       throw new Error(`Experiment with id ${experiment_id} doesn't exist`);
     }
