@@ -19,7 +19,7 @@ router.get(
   '/experiments',
   asyncHandler(async (req, res) => {
     const experiments = await ExperimentService.getAllExperiments();
-    res.json({ data: experiments });
+    res.json({ data: { experiments } });
   })
 );
 
