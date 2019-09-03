@@ -3,13 +3,18 @@ import app from '../../src/app';
 import { DB_TABLE } from '../../src/constants';
 import db from '../../src/dbConnection';
 import experimentsData from '../../seed/experiments.json';
+import variationsData from '../../seed/variations.json';
 
 describe('Experiment API', () => {
   beforeAll(async () => {
     await db(DB_TABLE.EXPERIMENTS).insert(experimentsData);
+    await db(DB_TABLE.VARIATIONS).insert(variationsData);
   });
 
   afterAll(async () => {
+    await db.raw(
+      `truncate table ${DB_TABLE.VARIATIONS} RESTART IDENTITY CASCADE`
+    );
     await db.raw(
       `truncate table ${DB_TABLE.EXPERIMENTS} RESTART IDENTITY CASCADE`
     );
@@ -117,6 +122,98 @@ describe('Experiment API', () => {
       const experiment = updatedBody.data.experiment;
 
       expect(experiment).toMatchObject(updatedData);
+    });
+  });
+
+  describe('GET /experiments/{experiment_id}/variations', () => {
+    it('should fetch all variations of an experiment', async () => {
+      const expId = 1;
+
+      const { body } = await request(app)
+        .get(`/experiments/${expId}/variations`)
+        .expect(200);
+
+      const variationsToExpect = variationsData.filter(
+        (v: any) => v.experiment_id === expId
+      );
+
+      const variations = body.data.variations;
+
+      expect(variations).toMatchObject(variationsToExpect);
+    });
+  });
+
+  describe('POST /experiments/{experiment_id}/variations', () => {
+    it('should create new variations for an experiment', async () => {
+      const expId = 3;
+      const variationsToCreate = [
+        {
+          name: 'Variation1',
+          is_control: false,
+          is_active: true
+        },
+        {
+          name: 'Control1',
+          is_control: true,
+          is_active: true
+        }
+      ];
+
+      await request(app)
+        .post(`/experiments/${expId}/variations`)
+        .send(variationsToCreate)
+        .expect(201);
+
+      // Fetch variations to check if they were created
+      const { body } = await request(app)
+        .get(`/experiments/${expId}/variations`)
+        .expect(200);
+
+      const variations = body.data.variations;
+
+      expect(variations).toMatchObject(variationsToCreate);
+    });
+
+    it('should not create variations for experiment with existing variations', async () => {
+      const expId = 2;
+      const variationsToCreate = [
+        {
+          name: 'Variation1',
+          is_control: false,
+          is_active: true
+        },
+        {
+          name: 'Control1',
+          is_control: true,
+          is_active: true
+        }
+      ];
+
+      await request(app)
+        .post(`/experiments/${expId}/variations`)
+        .send(variationsToCreate)
+        .expect(500);
+    });
+
+    it('should not create variations for deleted experiments', async () => {
+      const expId = 4;
+      const variationsToCreate = [
+        {
+          name: 'Variation1',
+          is_control: false,
+          is_active: true
+        },
+        {
+          name: 'Control1',
+          is_control: true,
+          is_active: true
+        }
+      ];
+
+      await request(app)
+        .post(`/experiments/${expId}/variations`)
+        .send(variationsToCreate)
+        .expect(500);
     });
   });
 });

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Variation1_1",
+    "is_control": false,
+    "is_active": true,
+    "experiment_id": 1
+  },
+  {
+    "name": "Variation2_1",
+    "is_control": false,
+    "is_active": true,
+    "experiment_id": 1
+  },
+  {
+    "name": "Control_1",
+    "is_control": true,
+    "is_active": true,
+    "experiment_id": 1
+  },
+  {
+    "name": "Variation1_2",
+    "is_control": false,
+    "is_active": true,
+    "experiment_id": 2
+  },
+  {
+    "name": "Control_2",
+    "is_control": true,
+    "is_active": true,
+    "experiment_id": 2
+  }
+]

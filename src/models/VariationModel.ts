@@ -9,8 +9,6 @@ export interface VariationModelInterface {
   ): Promise<Variation[]>;
 
   createVariation(variation: Partial<Variation>): Promise<VariationId>;
-
-  getVariation(variation_id: VariationId): Promise<Variation>;
 }
 
 @injectable()
@@ -27,10 +25,5 @@ export default class implements VariationModelInterface {
       .insert(variation)
       .returning('id');
     return ids[0];
-  }
-
-  public async getVariation(variation_id: VariationId) {
-    const variations = await db(DB_TABLE.VARIATIONS).where('id', variation_id);
-    return variations[0];
   }
 }

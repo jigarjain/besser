@@ -64,34 +64,26 @@ router.put(
 
 router.get(
   '/experiments/:experiment_id/variations',
-  asyncHandler(async (req, res, next) => {
-    try {
-      const variations = await VariationService.getVariationsForExperiment(
-        Number(req.params.experiment_id)
-      );
+  asyncHandler(async (req, res) => {
+    const variations = await VariationService.getVariationsForExperiment(
+      Number(req.params.experiment_id)
+    );
 
-      res.json({ data: { variations } });
-    } catch (err) {
-      next(err);
-    }
+    res.json({ data: { variations } });
   })
 );
 
 router.post(
   '/experiments/:experiment_id/variations',
   validatorMiddleware(variationValidator),
-  asyncHandler(async (req, res, next) => {
-    try {
-      const variations: Partial<Variation>[] = req.data.body;
-      const variation_ids = await VariationService.createVariations(
-        Number(req.params.experiment_id),
-        variations
-      );
+  asyncHandler(async (req, res) => {
+    const variations: Partial<Variation>[] = req.data.body;
+    const variation_ids = await VariationService.createVariations(
+      Number(req.params.experiment_id),
+      variations
+    );
 
-      res.json({ data: { variation_ids } });
-    } catch (err) {
-      next(err);
-    }
+    res.status(201).json({ data: { variation_ids } });
   })
 );
 
