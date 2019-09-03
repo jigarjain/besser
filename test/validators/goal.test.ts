@@ -14,6 +14,10 @@ describe('Goal Validator', () => {
     body.name = '';
 
     expect(() => goalValidator(body)).toThrow(ErrorMap.name.message);
+
+    body.name = ' ';
+
+    expect(() => goalValidator(body)).toThrow(ErrorMap.name.message);
   });
 
   it('should throw error on missing `name`', () => {

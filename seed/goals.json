@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Goal1",
+    "is_deleted": false
+  },
+  {
+    "name": "Goal2",
+    "is_deleted": false
+  },
+  {
+    "name": "Goal3",
+    "is_deleted": true
+  }
+]

@@ -36,7 +36,7 @@ export default class implements GoalModelInterface {
 
   public async updateGoal(goal_id: GoalId, goal: Goal) {
     return await db(DB_TABLE.GOALS)
-      .where('id', goal.id)
+      .where('id', goal_id)
       .update(goal);
   }
 }

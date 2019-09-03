@@ -2,7 +2,6 @@ import request from 'supertest';
 import app from '../../src/app';
 import { DB_TABLE } from '../../src/constants';
 import db from '../../src/dbConnection';
-// @ts-ignore
 import experimentsData from '../../seed/experiments.json';
 
 describe('Experiment API', () => {

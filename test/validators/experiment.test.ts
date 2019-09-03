@@ -16,6 +16,10 @@ describe('Experiment Validator', () => {
     body.name = '';
 
     expect(() => experimentValidator(body)).toThrow(ErrorMap.name.message);
+
+    body.name = ' ';
+
+    expect(() => experimentValidator(body)).toThrow(ErrorMap.name.message);
   });
 
   it('should throw error on missing `name`', () => {
