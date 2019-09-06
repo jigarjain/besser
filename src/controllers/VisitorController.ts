@@ -9,60 +9,48 @@ const VisitorService = Container.get<VisitorServiceInterface>(
   ServiceTypes.VisitorService
 );
 
-router.get(
+router.post(
   '/visitors/:visitor_id/assignments',
-  asyncHandler(async (req, res, next) => {
-    try {
-      const visitor_id = String(req.params.visitor_id);
-      const assignments = await VisitorService.getAssignments(visitor_id);
-      res.status(200).json({
-        data: {
-          assignments
-        }
-      });
-    } catch (err) {
-      next(err);
-    }
+  asyncHandler(async (req, res) => {
+    const visitor_id = String(req.params.visitor_id);
+    const assignments = await VisitorService.getAssignments(visitor_id);
+    res.status(201).json({
+      data: {
+        assignments
+      }
+    });
   })
 );
 
-router.get(
+router.post(
   '/visitors/:visitor_id/activate',
   validatorMiddleware(visitorValidation),
-  asyncHandler(async (req, res, next) => {
-    try {
-      const visitor_id = String(req.params.visitor_id);
-      const { experiment_ids } = req.data.query;
-      const assignments = await VisitorService.activate(
-        visitor_id,
-        experiment_ids
-      );
-      res.status(200).json({
-        data: {
-          assignments
-        }
-      });
-    } catch (err) {
-      next(err);
-    }
+  asyncHandler(async (req, res) => {
+    const visitor_id = String(req.params.visitor_id);
+    const { experiment_ids } = req.data.query;
+    const assignments = await VisitorService.activate(
+      visitor_id,
+      experiment_ids
+    );
+    res.status(201).json({
+      data: {
+        assignments
+      }
+    });
   })
 );
 
-router.get(
+router.post(
   '/visitors/:visitor_id/track/:goal_id',
-  asyncHandler(async (req, res, next) => {
-    try {
-      const visitor_id = String(req.params.visitor_id);
-      const goal_id = Number(req.params.goal_id);
-      const platform_info = {
-        device: '',
-        browser: ''
-      };
-      await VisitorService.track(visitor_id, goal_id, platform_info);
-      res.status(200).json({ data: {} });
-    } catch (err) {
-      next(err);
-    }
+  asyncHandler(async (req, res) => {
+    const visitor_id = String(req.params.visitor_id);
+    const goal_id = Number(req.params.goal_id);
+    const platform_info = {
+      device: '',
+      browser: ''
+    };
+    await VisitorService.track(visitor_id, goal_id, platform_info);
+    res.status(201).json({ data: {} });
   })
 );
 

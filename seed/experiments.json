@@ -13,8 +13,8 @@
   },
   {
     "name": "Experiment3",
-    "traffic_alloc": 20,
-    "is_running": false,
+    "traffic_alloc": 100,
+    "is_running": true,
     "is_deleted": false
   },
   {

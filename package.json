@@ -10,7 +10,7 @@
     "build": "tsc",
     "serve": "node dist/server.js",
     "start": "npm run build && npm run serve",
-    "test": "jest --config=jest.config.json --verbose",
+    "test": "jest --config=jest.config.json --verbose --runInBand",
     "test-coverage": "npm run test -- --coverage",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-build\" \"npm run watch-serve\"",
     "watch-serve": "nodemon dist/server.js",

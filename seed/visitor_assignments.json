@@ -1,0 +1,26 @@
+[
+  {
+    "visitor_id": "123",
+    "experiment_id": 1,
+    "variation_id": 1,
+    "action": "ASSIGNED"
+  },
+  {
+    "visitor_id": "123",
+    "experiment_id": 2,
+    "variation_id": null,
+    "action": "IGNORED"
+  },
+  {
+    "visitor_id": "456",
+    "experiment_id": 1,
+    "variation_id": null,
+    "action": "IGNORED"
+  },
+  {
+    "visitor_id": "456",
+    "experiment_id": 2,
+    "variation_id": 5,
+    "action": "ASSIGNED"
+  }
+]
